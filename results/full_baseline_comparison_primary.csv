@@ -1,0 +1,3 @@
+Dataset,Decision Tree_F1,Naive Bayes_F1,Logistic Regression_F1,SVM_F1,Random Forest_F1,XGBoost_Baseline_F1,KAB_XGBoost_WCE_F1
+KNUST,0.7878,0.6727,0.6682,0.6744,0.8635,0.7956,0.8043
+Alzubaidi,0.6368,0.6582,0.7031,0.6923,0.6945,0.6858,0.701
