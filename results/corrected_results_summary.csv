@@ -1,0 +1,15 @@
+Dataset,Model,Mean_F1,SD,Delta_vs_WCE
+KNUST,KAB-XGBoost-WCE,0.8855,0.016,0.0
+KNUST,Baseline XGBoost,0.8837,0.0139,-0.0018
+KNUST,Decision Tree,0.9489,0.0147,0.0634
+KNUST,Naive Bayes,0.6727,0.0212,-0.2128
+KNUST,Logistic Regression,0.6681,0.022,-0.2174
+KNUST,SVM,0.859,0.0174,-0.0265
+KNUST,Random Forest,0.9569,0.0115,0.0714
+Alzubaidi,KAB-XGBoost-WCE,0.7024,0.0344,0.0
+Alzubaidi,Baseline XGBoost,0.6993,0.0369,-0.0031
+Alzubaidi,Decision Tree,0.6715,0.0381,-0.031
+Alzubaidi,Naive Bayes,0.6582,0.048,-0.0442
+Alzubaidi,Logistic Regression,0.7052,0.0373,0.0027
+Alzubaidi,SVM,0.6845,0.0417,-0.018
+Alzubaidi,Random Forest,0.6933,0.0449,-0.0091

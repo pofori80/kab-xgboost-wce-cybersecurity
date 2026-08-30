@@ -1,0 +1,10 @@
+{
+  "KNUST": {
+    "depth": 7,
+    "lambda": 1.5
+  },
+  "Alzubaidi": {
+    "depth": 2,
+    "lambda": 1.5
+  }
+}
