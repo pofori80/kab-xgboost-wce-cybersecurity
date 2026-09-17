@@ -1,0 +1,134 @@
+{
+  "n_raw": 4121,
+  "n_removed": 2033,
+  "n_unique": 2088,
+  "X_shape": [
+    2088,
+    17
+  ],
+  "feature_order": [
+    "Q6. I can recognise a phishing email or suspicious link.",
+    "Q7. I understand what a data breach is and how it can affect an organisation.",
+    "Q8. I know the difference between a strong and a weak password.",
+    "Q9. I understand why using public Wi-Fi without a VPN can be risky for business data.",
+    "Q10. I can explain what social engineering is and give an example.",
+    "Q13. I believe supply chain professionals need cybersecurity knowledge to do their jobs safely.",
+    "Q14. I would report a cybersecurity incident even if I was unsure whether it was serious.",
+    "Q15. I feel confident that I can protect business data in a professional setting.",
+    "Q16. Cybersecurity risks in supply chains concern me personally.",
+    "Q17. I think most cyberattacks can be prevented with basic security awareness.",
+    "Q1. What is your gender?",
+    "Q2. What is your current year of study?",
+    "Q3. Have you ever taken a formal course in IT or cybersecurity?",
+    "Q4. How many years have you been using the internet regularly?",
+    "Q5. How often do you use digital tools for supply chain or business tasks (e.g. procurement platforms, inventory systems)?",
+    "K_agg",
+    "A_agg"
+  ],
+  "label_median": 18.0,
+  "class_low": 1167,
+  "class_high": 921,
+  "tuned_baseline_depth": 2,
+  "tuned_wce_depth": 3,
+  "tuned_wce_lambda": 1.25,
+  "cv": {
+    "KAB-XGBoost-WCE": {
+      "mean": 0.6435958712043381,
+      "sd": 0.03411017489432788
+    },
+    "Baseline XGBoost": {
+      "mean": 0.6477272857748224,
+      "sd": 0.0363852510407669
+    },
+    "Stock scale_pos_weight": {
+      "mean": 0.6531933199004061,
+      "sd": 0.03607774307254568
+    },
+    "Decision Tree": {
+      "mean": 0.6173062443470161,
+      "sd": 0.03643347037160837
+    },
+    "Naive Bayes": {
+      "mean": 0.6604846117491914,
+      "sd": 0.033017291758057565
+    },
+    "Logistic Regression": {
+      "mean": 0.6541590281508682,
+      "sd": 0.030916466382893918
+    },
+    "SVM": {
+      "mean": 0.6425614086760909,
+      "sd": 0.0346472624360493
+    },
+    "Random Forest": {
+      "mean": 0.6448809719322746,
+      "sd": 0.03424736877846658
+    }
+  },
+  "wce_vs_baseline": {
+    "delta": -0.004131414570484208,
+    "w_plus": 500.0,
+    "w_minus": 775.0,
+    "p": 0.18768390417341507,
+    "fold_win": 18,
+    "ties": 0
+  },
+  "naive_bayes_vs_wce_p": 0.00010381446904439429,
+  "ablation": {
+    "A": 0.6293801669608302,
+    "B": 0.6475589290992732,
+    "C": 0.6303503108551735,
+    "D": 0.6443230882960478,
+    "depth_contribution": 0.01817876213844294,
+    "weight_contribution": 0.000970143894343245
+  },
+  "dt_depth_curve": {
+    "depth1": {
+      "mean": 0.6185642157313341,
+      "sd": 0.027822419799680632
+    },
+    "depth2": {
+      "mean": 0.6167413448241613,
+      "sd": 0.03270608740626513
+    },
+    "depth3": {
+      "mean": 0.6130497780419112,
+      "sd": 0.031803725323096915
+    },
+    "unlimited": {
+      "mean": 0.5748543361252088,
+      "sd": 0.03448269815387907
+    }
+  },
+  "held_out": {
+    "n_test": 418,
+    "cm_baseline": [
+      [
+        163,
+        71
+      ],
+      [
+        74,
+        110
+      ]
+    ],
+    "cm_wce": [
+      [
+        155,
+        79
+      ],
+      [
+        79,
+        105
+      ]
+    ],
+    "mcnemar_b": 23,
+    "mcnemar_c": 10,
+    "auc_baseline": 0.69908955778521,
+    "auc_wce": 0.697068933481977
+  },
+  "timing": {
+    "baseline_ms": 19.7514872200054,
+    "wce_ms": 23.8471879400322
+  }
+}
