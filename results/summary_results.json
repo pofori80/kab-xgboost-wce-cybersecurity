@@ -1,134 +1,588 @@
 {
-  "n_raw": 4121,
-  "n_removed": 2033,
-  "n_unique": 2088,
-  "X_shape": [
-    2088,
-    17
-  ],
-  "feature_order": [
-    "Q6. I can recognise a phishing email or suspicious link.",
-    "Q7. I understand what a data breach is and how it can affect an organisation.",
-    "Q8. I know the difference between a strong and a weak password.",
-    "Q9. I understand why using public Wi-Fi without a VPN can be risky for business data.",
-    "Q10. I can explain what social engineering is and give an example.",
-    "Q13. I believe supply chain professionals need cybersecurity knowledge to do their jobs safely.",
-    "Q14. I would report a cybersecurity incident even if I was unsure whether it was serious.",
-    "Q15. I feel confident that I can protect business data in a professional setting.",
-    "Q16. Cybersecurity risks in supply chains concern me personally.",
-    "Q17. I think most cyberattacks can be prevented with basic security awareness.",
-    "Q1. What is your gender?",
-    "Q2. What is your current year of study?",
-    "Q3. Have you ever taken a formal course in IT or cybersecurity?",
-    "Q4. How many years have you been using the internet regularly?",
-    "Q5. How often do you use digital tools for supply chain or business tasks (e.g. procurement platforms, inventory systems)?",
-    "K_agg",
-    "A_agg"
-  ],
-  "label_median": 18.0,
-  "class_low": 1167,
-  "class_high": 921,
-  "tuned_baseline_depth": 2,
-  "tuned_wce_depth": 3,
-  "tuned_wce_lambda": 1.25,
-  "cv": {
-    "KAB-XGBoost-WCE": {
-      "mean": 0.6435958712043381,
-      "sd": 0.03411017489432788
+  "knust": {
+    "X_shape": [
+      2088,
+      17
+    ],
+    "feature_order": [
+      "Q6",
+      "Q7",
+      "Q8",
+      "Q9",
+      "Q10",
+      "Q13",
+      "Q14",
+      "Q15",
+      "Q16",
+      "Q17",
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4",
+      "Q5",
+      "K_agg",
+      "A_agg"
+    ],
+    "class_low": 1167,
+    "class_high": 921,
+    "tuned_baseline_depth": 2,
+    "tuned_wce_depth": 3,
+    "tuned_wce_lambda": 1.25,
+    "cv": {
+      "KAB-XGBoost-WCE": {
+        "mean": 0.6436,
+        "sd": 0.0341
+      },
+      "Baseline XGBoost": {
+        "mean": 0.6477,
+        "sd": 0.0364
+      },
+      "Stock scale_pos_weight": {
+        "mean": 0.6532,
+        "sd": 0.0361
+      },
+      "Decision Tree": {
+        "mean": 0.6173,
+        "sd": 0.0364
+      },
+      "Naive Bayes": {
+        "mean": 0.6605,
+        "sd": 0.033
+      },
+      "Logistic Regression": {
+        "mean": 0.6542,
+        "sd": 0.0309
+      },
+      "SVM": {
+        "mean": 0.6426,
+        "sd": 0.0346
+      },
+      "Random Forest": {
+        "mean": 0.6449,
+        "sd": 0.0342
+      }
     },
-    "Baseline XGBoost": {
-      "mean": 0.6477272857748224,
-      "sd": 0.0363852510407669
+    "wce_vs_baseline": {
+      "delta": -0.0041,
+      "w_plus": 500.0,
+      "w_minus": 775.0,
+      "p": 0.1877,
+      "fold_win": 18,
+      "ties": 0
     },
-    "Stock scale_pos_weight": {
-      "mean": 0.6531933199004061,
-      "sd": 0.03607774307254568
+    "naive_bayes_vs_wce_p": 0.000104,
+    "ablation": {
+      "A": 0.6294,
+      "B": 0.6476,
+      "C": 0.6304,
+      "D": 0.6443,
+      "depth_contribution": 0.0182,
+      "weight_contribution": 0.001
     },
-    "Decision Tree": {
-      "mean": 0.6173062443470161,
-      "sd": 0.03643347037160837
+    "dt_depth_curve": {
+      "depth1": {
+        "mean": 0.6186,
+        "sd": 0.0278
+      },
+      "depth2": {
+        "mean": 0.6167,
+        "sd": 0.0327
+      },
+      "depth3": {
+        "mean": 0.613,
+        "sd": 0.0318
+      },
+      "unlimited": {
+        "mean": 0.5749,
+        "sd": 0.0345
+      }
     },
-    "Naive Bayes": {
-      "mean": 0.6604846117491914,
-      "sd": 0.033017291758057565
+    "held_out": {
+      "n_test": 418,
+      "cm_baseline": [
+        [
+          163,
+          71
+        ],
+        [
+          74,
+          110
+        ]
+      ],
+      "cm_wce": [
+        [
+          155,
+          79
+        ],
+        [
+          79,
+          105
+        ]
+      ],
+      "mcnemar_b": 23,
+      "mcnemar_c": 10,
+      "mcnemar_chi2": 4.364,
+      "mcnemar_p": 0.0367,
+      "auc_baseline": 0.6991,
+      "auc_wce": 0.6971,
+      "wce_heldout_macro_f1": 0.6165
     },
-    "Logistic Regression": {
-      "mean": 0.6541590281508682,
-      "sd": 0.030916466382893918
+    "timing": {
+      "baseline_ms": 22.4,
+      "wce_ms": 26.1
     },
-    "SVM": {
-      "mean": 0.6425614086760909,
-      "sd": 0.0346472624360493
+    "robustness": {
+      "ordinal_base": 0.6165,
+      "ordinal_mean": 0.6242,
+      "ordinal_sd": 0.0093,
+      "ordinal_drop": -0.0077,
+      "bootstrap_mean": 0.6161,
+      "bootstrap_lo": 0.5724,
+      "bootstrap_hi": 0.6624,
+      "bootstrap_iters": 1000
     },
-    "Random Forest": {
-      "mean": 0.6448809719322746,
-      "sd": 0.03424736877846658
+    "skew_test": {
+      "minority_frac": 0.25,
+      "n": 1556,
+      "baseline": 0.5495,
+      "wce": 0.5392,
+      "scale_pos_weight": 0.602,
+      "wce_gain": -0.0103,
+      "spw_gain": 0.0526
+    },
+    "subgroups": {
+      "year": {
+        "0": {
+          "n": 519,
+          "f1": 0.6116
+        },
+        "1": {
+          "n": 835,
+          "f1": 0.6398
+        },
+        "2": {
+          "n": 734,
+          "f1": 0.6504
+        }
+      },
+      "it_course": {
+        "0": {
+          "n": 1497,
+          "f1": 0.6325
+        },
+        "1": {
+          "n": 591,
+          "f1": 0.634
+        }
+      }
+    },
+    "shap": [
+      {
+        "feature": "K_agg",
+        "mean_abs_shap": 0.4479
+      },
+      {
+        "feature": "A_agg",
+        "mean_abs_shap": 0.3516
+      },
+      {
+        "feature": "Q5",
+        "mean_abs_shap": 0.1856
+      },
+      {
+        "feature": "Q4",
+        "mean_abs_shap": 0.1613
+      },
+      {
+        "feature": "Q1",
+        "mean_abs_shap": 0.1473
+      },
+      {
+        "feature": "Q17",
+        "mean_abs_shap": 0.1462
+      },
+      {
+        "feature": "Q10",
+        "mean_abs_shap": 0.1307
+      },
+      {
+        "feature": "Q8",
+        "mean_abs_shap": 0.1211
+      },
+      {
+        "feature": "Q9",
+        "mean_abs_shap": 0.1187
+      },
+      {
+        "feature": "Q14",
+        "mean_abs_shap": 0.1175
+      },
+      {
+        "feature": "Q2",
+        "mean_abs_shap": 0.1063
+      },
+      {
+        "feature": "Q15",
+        "mean_abs_shap": 0.1027
+      },
+      {
+        "feature": "Q7",
+        "mean_abs_shap": 0.0958
+      },
+      {
+        "feature": "Q13",
+        "mean_abs_shap": 0.09
+      },
+      {
+        "feature": "Q3",
+        "mean_abs_shap": 0.0625
+      },
+      {
+        "feature": "Q16",
+        "mean_abs_shap": 0.061
+      },
+      {
+        "feature": "Q6",
+        "mean_abs_shap": 0.0583
+      }
+    ],
+    "n_raw": 4121,
+    "n_removed": 2033,
+    "n_unique": 2088,
+    "label_median": 18.0,
+    "cronbach": {
+      "knowledge": 0.703,
+      "attitude": 0.603,
+      "behaviour": 0.709
+    },
+    "behaviour_distribution": {
+      "6": 8,
+      "7": 19,
+      "8": 37,
+      "9": 48,
+      "10": 60,
+      "11": 87,
+      "12": 95,
+      "13": 111,
+      "14": 140,
+      "15": 148,
+      "16": 128,
+      "17": 146,
+      "18": 140,
+      "19": 139,
+      "20": 155,
+      "21": 129,
+      "22": 104,
+      "23": 127,
+      "24": 76,
+      "25": 76,
+      "26": 49,
+      "27": 40,
+      "28": 17,
+      "29": 6,
+      "30": 3
+    },
+    "threshold_sensitivity": {
+      "median": {
+        "cut": 18.0,
+        "low_frac": 0.559,
+        "baseline_f1": 0.6333
+      },
+      "tertile_top": {
+        "cut": 20.0,
+        "low_frac": 0.7,
+        "baseline_f1": 0.5993
+      },
+      "quartile_top": {
+        "cut": 21.0,
+        "low_frac": 0.761,
+        "baseline_f1": 0.565
+      }
+    },
+    "sampling_frame": {
+      "registered_est": 3200,
+      "raw": 4121,
+      "unique": 2088,
+      "response_rate_raw": 1.288,
+      "response_rate_unique": 0.652
     }
   },
-  "wce_vs_baseline": {
-    "delta": -0.004131414570484208,
-    "w_plus": 500.0,
-    "w_minus": 775.0,
-    "p": 0.18768390417341507,
-    "fold_win": 18,
-    "ties": 0
-  },
-  "naive_bayes_vs_wce_p": 0.00010381446904439429,
-  "ablation": {
-    "A": 0.6293801669608302,
-    "B": 0.6475589290992732,
-    "C": 0.6303503108551735,
-    "D": 0.6443230882960478,
-    "depth_contribution": 0.01817876213844294,
-    "weight_contribution": 0.000970143894343245
-  },
-  "dt_depth_curve": {
-    "depth1": {
-      "mean": 0.6185642157313341,
-      "sd": 0.027822419799680632
-    },
-    "depth2": {
-      "mean": 0.6167413448241613,
-      "sd": 0.03270608740626513
-    },
-    "depth3": {
-      "mean": 0.6130497780419112,
-      "sd": 0.031803725323096915
-    },
-    "unlimited": {
-      "mean": 0.5748543361252088,
-      "sd": 0.03448269815387907
-    }
-  },
-  "held_out": {
-    "n_test": 418,
-    "cm_baseline": [
-      [
-        163,
-        71
-      ],
-      [
-        74,
-        110
-      ]
+  "alzubaidi": {
+    "X_shape": [
+      1231,
+      28
     ],
-    "cm_wce": [
-      [
-        155,
-        79
-      ],
-      [
-        79,
-        105
-      ]
+    "feature_order": [
+      "B19_0",
+      "B19_1",
+      "B19_2",
+      "B19_3",
+      "B19_4",
+      "B19_5",
+      "B20_0",
+      "B20_1",
+      "B20_2",
+      "B20_3",
+      "B20_4",
+      "B20_5",
+      "B18_0",
+      "B18_1",
+      "B18_2",
+      "B18_3",
+      "B18_4",
+      "B18_5",
+      "B18_6",
+      "B22_0",
+      "B22_1",
+      "B22_2",
+      "B22_3",
+      "B22_4",
+      "B13",
+      "B21",
+      "K_agg",
+      "A_agg"
     ],
-    "mcnemar_b": 23,
-    "mcnemar_c": 10,
-    "auc_baseline": 0.69908955778521,
-    "auc_wce": 0.697068933481977
-  },
-  "timing": {
-    "baseline_ms": 19.7514872200054,
-    "wce_ms": 23.8471879400322
+    "class_low": 539,
+    "class_high": 692,
+    "tuned_baseline_depth": 2,
+    "tuned_wce_depth": 3,
+    "tuned_wce_lambda": 1.25,
+    "cv": {
+      "KAB-XGBoost-WCE": {
+        "mean": 0.6808,
+        "sd": 0.0406
+      },
+      "Baseline XGBoost": {
+        "mean": 0.6908,
+        "sd": 0.0427
+      },
+      "Stock scale_pos_weight": {
+        "mean": 0.6881,
+        "sd": 0.0434
+      },
+      "Decision Tree": {
+        "mean": 0.6448,
+        "sd": 0.0394
+      },
+      "Naive Bayes": {
+        "mean": 0.654,
+        "sd": 0.0383
+      },
+      "Logistic Regression": {
+        "mean": 0.6841,
+        "sd": 0.044
+      },
+      "SVM": {
+        "mean": 0.6692,
+        "sd": 0.0394
+      },
+      "Random Forest": {
+        "mean": 0.6899,
+        "sd": 0.0438
+      }
+    },
+    "wce_vs_baseline": {
+      "delta": -0.0101,
+      "w_plus": 353.0,
+      "w_minus": 872.0,
+      "p": 0.0098,
+      "fold_win": 15,
+      "ties": 1
+    },
+    "naive_bayes_vs_wce_p": 0.000109,
+    "ablation": {
+      "A": 0.6648,
+      "B": 0.6816,
+      "C": 0.6688,
+      "D": 0.6844,
+      "depth_contribution": 0.0168,
+      "weight_contribution": 0.004
+    },
+    "dt_depth_curve": {
+      "depth1": {
+        "mean": 0.617,
+        "sd": 0.0361
+      },
+      "depth2": {
+        "mean": 0.6777,
+        "sd": 0.042
+      },
+      "depth3": {
+        "mean": 0.648,
+        "sd": 0.0385
+      },
+      "unlimited": {
+        "mean": 0.6102,
+        "sd": 0.0424
+      }
+    },
+    "held_out": {
+      "n_test": 247,
+      "cm_baseline": [
+        [
+          69,
+          39
+        ],
+        [
+          30,
+          109
+        ]
+      ],
+      "cm_wce": [
+        [
+          63,
+          45
+        ],
+        [
+          33,
+          106
+        ]
+      ],
+      "mcnemar_b": 14,
+      "mcnemar_c": 5,
+      "mcnemar_chi2": 3.368,
+      "mcnemar_p": 0.0665,
+      "auc_baseline": 0.7595,
+      "auc_wce": 0.7385,
+      "wce_heldout_macro_f1": 0.6743
+    },
+    "timing": {
+      "baseline_ms": 20.4,
+      "wce_ms": 24.1
+    },
+    "robustness": {
+      "ordinal_base": 0.6743,
+      "ordinal_mean": 0.6706,
+      "ordinal_sd": 0.0067,
+      "ordinal_drop": 0.0038,
+      "bootstrap_mean": 0.6733,
+      "bootstrap_lo": 0.6096,
+      "bootstrap_hi": 0.7328,
+      "bootstrap_iters": 1000
+    },
+    "skew_test": {
+      "minority_frac": 0.25,
+      "n": 718,
+      "baseline": 0.6456,
+      "wce": 0.6339,
+      "scale_pos_weight": 0.6517,
+      "wce_gain": -0.0117,
+      "spw_gain": 0.0061
+    },
+    "subgroups": null,
+    "shap": [
+      {
+        "feature": "A_agg",
+        "mean_abs_shap": 0.4488
+      },
+      {
+        "feature": "B18_3",
+        "mean_abs_shap": 0.4313
+      },
+      {
+        "feature": "B18_5",
+        "mean_abs_shap": 0.2891
+      },
+      {
+        "feature": "B18_2",
+        "mean_abs_shap": 0.2691
+      },
+      {
+        "feature": "B21",
+        "mean_abs_shap": 0.2343
+      },
+      {
+        "feature": "B18_4",
+        "mean_abs_shap": 0.1936
+      },
+      {
+        "feature": "K_agg",
+        "mean_abs_shap": 0.1618
+      },
+      {
+        "feature": "B19_0",
+        "mean_abs_shap": 0.1513
+      },
+      {
+        "feature": "B18_0",
+        "mean_abs_shap": 0.1492
+      },
+      {
+        "feature": "B20_0",
+        "mean_abs_shap": 0.1453
+      },
+      {
+        "feature": "B20_1",
+        "mean_abs_shap": 0.145
+      },
+      {
+        "feature": "B13",
+        "mean_abs_shap": 0.1386
+      },
+      {
+        "feature": "B19_1",
+        "mean_abs_shap": 0.1288
+      },
+      {
+        "feature": "B19_4",
+        "mean_abs_shap": 0.128
+      },
+      {
+        "feature": "B18_6",
+        "mean_abs_shap": 0.1271
+      },
+      {
+        "feature": "B19_5",
+        "mean_abs_shap": 0.1209
+      },
+      {
+        "feature": "B22_4",
+        "mean_abs_shap": 0.0811
+      },
+      {
+        "feature": "B19_3",
+        "mean_abs_shap": 0.0735
+      },
+      {
+        "feature": "B20_3",
+        "mean_abs_shap": 0.0702
+      },
+      {
+        "feature": "B20_4",
+        "mean_abs_shap": 0.0644
+      },
+      {
+        "feature": "B22_3",
+        "mean_abs_shap": 0.0631
+      },
+      {
+        "feature": "B20_5",
+        "mean_abs_shap": 0.0578
+      },
+      {
+        "feature": "B19_2",
+        "mean_abs_shap": 0.0498
+      },
+      {
+        "feature": "B22_1",
+        "mean_abs_shap": 0.037
+      },
+      {
+        "feature": "B22_0",
+        "mean_abs_shap": 0.0364
+      },
+      {
+        "feature": "B18_1",
+        "mean_abs_shap": 0.033
+      },
+      {
+        "feature": "B22_2",
+        "mean_abs_shap": 0.0252
+      },
+      {
+        "feature": "B20_2",
+        "mean_abs_shap": 0.0199
+      }
+    ]
   }
 }
