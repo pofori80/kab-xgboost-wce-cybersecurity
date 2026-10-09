@@ -1,0 +1,18 @@
+{
+  "python": "3.13.16 (main, Oct  1 2026, 15:40:24) [GCC 13.3.0]",
+  "platform": "Linux-6.18.44-fc-v114-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "cpu_count": 2,
+  "packages": {
+    "xgboost": "3.4.1",
+    "sklearn": "1.9.1",
+    "pandas": "3.0.5",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "shap": "0.52.0",
+    "openpyxl": "3.1.5",
+    "matplotlib": "3.10.3"
+  },
+  "run_timestamp": "2026-10-09T22:48:51Z",
+  "seed": 42
+}

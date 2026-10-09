@@ -4,7 +4,7 @@ A cost-sensitive XGBoost variant (KAB-XGBoost-WCE) for predicting cybersecurity 
 
 ## Key finding
 
-WCE weighting produces no measurable advantage over the baseline on either dataset. The null result holds across five random seeds and both KNUST and Alzubaidi data.
+WCE weighting produces no measurable advantage over the baseline on either dataset. The null result holds across five random seeds on KNUST and on the Alzubaidi validation set.
 
 ## Reproducibility
 
@@ -24,5 +24,5 @@ Outputs are written to `results/`. See `results/pipeline_run_log.txt` for the co
 
 ## Documents
 
-- `docs/Ofori_Prince_Phase1_Methods_R10.docx` — Methods chapter (R10)
-- `docs/Ofori_Prince_Phase1_Results_R10.docx` — Results chapter (R10)
+- `docs/Ofori_Prince_Phase1_Methods_R11.docx` — Methods chapter (R11)
+- `docs/Ofori_Prince_Phase1_Results_R11.docx` — Results chapter (R11)
