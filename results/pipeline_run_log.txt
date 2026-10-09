@@ -4,9 +4,10 @@ KNUST: raw=4121 removed=2033 unique=2088 straight-line=0
 
 ============================================================
 KNUST  X.shape=(2088, 17)  Low=1167 High=921
-  tuned baseline depth=2  WCE depth=2 lambda=1.25
-  WCE 0.6509  Baseline 0.6498  p=0.5657
-  R11 base_f1=0.6716  held-out WCE F1=0.6716
+  tuned baseline depth=2  WCE depth=2 lambda=1.5
+  WCE 0.6518  Baseline 0.65  p=0.5407
+  R11 base_f1=0.6423  held-out WCE F1=0.6423
+  Running raw vs dedup tree comparison (Q19)...
   Alzubaidi: raw=1231, removed=44, unique=1187
 
 ============================================================
@@ -22,9 +23,13 @@ Seed sensitivity (KNUST)...
   seed=21...
   seed=42...
 
+Generating figures...
+  Figures saved to results/figures/
+
 Wrote results to results/
   summary_results.json
   shap_importance.json
   seed_sensitivity.json
   fold_level_results_knust.csv
   fold_level_results_alzubaidi.csv
+  figures/ (ROC, boxplots, SHAP, confusion matrices)

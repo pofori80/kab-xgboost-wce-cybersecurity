@@ -88,16 +88,35 @@ def dedup_knust(df, q):
 def features_knust(df, q):
     know = [q[f"Q{i}"] for i in range(6, 11)]
     att  = [q[f"Q{i}"] for i in range(13, 18)]
-    demo = [q[f"Q{i}"] for i in range(1, 6)]
     work = df.copy()
-    for c in demo:
-        work[c] = work[c].astype("category").cat.codes
+
+    # Q1 gender: Male=1, Female=0, Prefer not to say=0 (binary, N3 fix)
+    work["Q1_male"] = (df[q["Q1"]].astype(str).str.strip().str.lower() == "male").astype(float)
+
+    # Q2 year of study: ordinal Year 2=2, Year 3=3, Year 4=4 (N3 fix)
+    yr_map = {"Year 2": 2.0, "Year 3": 3.0, "Year 4": 4.0}
+    work["Q2_year"] = df[q["Q2"]].map(yr_map).fillna(3.0)
+
+    # Q3 IT course: Yes=1, No=0 (binary)
+    work["Q3_it"] = (df[q["Q3"]].astype(str).str.strip().str.lower() == "yes").astype(float)
+
+    # Q4 internet years: ordinal 1/2/3 (N3 fix: explicit order)
+    yrs_map = {"Less than 2 years": 1.0, "2–5 years": 2.0, "More than 5 years": 3.0}
+    work["Q4_yrs"] = df[q["Q4"]].map(yrs_map).fillna(2.0)
+
+    # Q5 digital tool use: ordinal 1/2/3/4 (N3 fix: explicit order)
+    freq_map = {"Rarely": 1.0, "Sometimes": 2.0, "Often": 3.0, "Very often": 4.0}
+    work["Q5_freq"] = df[q["Q5"]].map(freq_map).fillna(2.0)
+
+    demo_cols = ["Q1_male", "Q2_year", "Q3_it", "Q4_yrs", "Q5_freq"]
+    demo_orig = [q[f"Q{i}"] for i in range(1, 6)]  # kept for subgroup indexing
+
     work["K_agg"] = df[know].mean(axis=1)
     work["A_agg"] = df[att].mean(axis=1)
-    cols = know + att + demo + ["K_agg", "A_agg"]
+    cols = know + att + demo_cols + ["K_agg", "A_agg"]
     printable = ([f"Q{i}" for i in range(6, 11)] + [f"Q{i}" for i in range(13, 18)]
-                 + [f"Q{i}" for i in range(1, 6)] + ["K_agg", "A_agg"])
-    return work[cols].to_numpy(float), printable, know, att, demo
+                 + demo_cols + ["K_agg", "A_agg"])
+    return work[cols].to_numpy(float), printable, know, att, demo_orig
 
 
 def label_knust(df, q):
@@ -206,7 +225,7 @@ def repeated_cv(X, y, kidx, aidx, n_rep=5, n_fold=10, seed=SEED):
     names = ["KAB-XGBoost-WCE", "Baseline XGBoost", "Stock scale_pos_weight",
              "Decision Tree", "Naive Bayes", "Logistic Regression", "SVM", "Random Forest"]
     sc = {n: [] for n in names}
-    tb, tw = [], []
+    tb, tw, tb_matched, tw_matched = [], [], [], []
     tuned_depths_base, tuned_depths_wce, tuned_lambdas = [], [], []
     for rep in range(n_rep):
         skf = StratifiedKFold(n_fold, shuffle=True, random_state=seed + rep)
@@ -231,6 +250,14 @@ def repeated_cv(X, y, kidx, aidx, n_rep=5, n_fold=10, seed=SEED):
             tw.append(time.perf_counter() - t0)
             sc["KAB-XGBoost-WCE"].append(f1_score(yte, m.predict(Xte), average="macro"))
 
+            # Depth-matched timing: both models at WCE tuned depth (M19 fix)
+            t0 = time.perf_counter()
+            XGBClassifier(max_depth=d_wce, **XGB).fit(Xtr, ytr)
+            tb_matched.append(time.perf_counter() - t0)
+            t0 = time.perf_counter()
+            XGBClassifier(max_depth=d_wce, **XGB).fit(Xtr, ytr, sample_weight=w)
+            tw_matched.append(time.perf_counter() - t0)
+
             spw = (ytr == 0).sum() / max((ytr == 1).sum(), 1)
             m = XGBClassifier(max_depth=d_base, scale_pos_weight=spw, **XGB).fit(Xtr, ytr)
             sc["Stock scale_pos_weight"].append(f1_score(yte, m.predict(Xte), average="macro"))
@@ -253,7 +280,7 @@ def repeated_cv(X, y, kidx, aidx, n_rep=5, n_fold=10, seed=SEED):
             sc["SVM"].append(f1_score(yte, m.predict(Xte_s), average="macro"))
             m = RandomForestClassifier(n_estimators=100, random_state=SEED, n_jobs=-1).fit(Xtr, ytr)
             sc["Random Forest"].append(f1_score(yte, m.predict(Xte), average="macro"))
-    return sc, tb, tw, tuned_depths_base, tuned_depths_wce, tuned_lambdas
+    return sc, tb, tw, tuned_depths_base, tuned_depths_wce, tuned_lambdas, tb_matched, tw_matched
 
 
 # ── Ablation ─────────────────────────────────────────────────────────────────
@@ -466,7 +493,7 @@ def run_dataset(name, X, y, kidx, aidx, feat_names, do_subgroups=None, seed=SEED
     d_base = tune_depth(X, y)
     d_wce, lam = tune_wce(X, y, kidx, aidx)
     print(f"  tuned baseline depth={d_base}  WCE depth={d_wce} lambda={lam}")
-    sc, tb, tw, depths_base, depths_wce, lambdas = repeated_cv(X, y, kidx, aidx, seed=seed)
+    sc, tb, tw, depths_base, depths_wce, lambdas, tb_m, tw_m = repeated_cv(X, y, kidx, aidx, seed=seed)
     fold_df = pd.DataFrame(sc)
     fold_df.insert(0, "fold", range(1, len(fold_df) + 1))
     fold_df.to_csv(os.path.join(RESULTS_DIR, f"fold_level_results_{name.lower()}.csv"), index=False)
@@ -529,8 +556,14 @@ def run_dataset(name, X, y, kidx, aidx, feat_names, do_subgroups=None, seed=SEED
         ),
         dt_depth_curve={k: dict(mean=v[0], sd=v[1]) for k, v in curve.items()},
         held_out=ho,
-        timing=dict(baseline_ms=round(float(np.mean(tb) * 1000), 1),
-                    wce_ms=round(float(np.mean(tw) * 1000), 1)),
+        timing=dict(
+            baseline_ms=round(float(np.mean(tb) * 1000), 1),
+            wce_ms=round(float(np.mean(tw) * 1000), 1),
+            # Depth-matched: both at WCE tuned depth — isolates weight overhead (M19 fix)
+            baseline_matched_ms=round(float(np.mean(tb_m) * 1000), 1),
+            wce_matched_ms=round(float(np.mean(tw_m) * 1000), 1),
+            note="matched timings use WCE tuned depth for both models"
+        ),
         robustness=rob, skew_test=skew, subgroups=subg, shap=shp,
     )
 
@@ -544,7 +577,7 @@ def seed_sensitivity(X, y, kidx, aidx, seeds=(0, 7, 13, 21, 42)):
         global XGB
         XGB_orig = XGB.copy()
         XGB = {**XGB, "random_state": s}
-        sc, _, _, _, _, _ = repeated_cv(X, y, kidx, aidx, seed=s)
+        sc, _, _, _, _, _, _, _ = repeated_cv(X, y, kidx, aidx, seed=s)
         wce  = np.array(sc["KAB-XGBoost-WCE"])
         base = np.array(sc["Baseline XGBoost"])
         stats = wilcoxon_stats(wce, base)
@@ -556,6 +589,51 @@ def seed_sensitivity(X, y, kidx, aidx, seeds=(0, 7, 13, 21, 42)):
         )
         XGB = XGB_orig
     return results
+
+
+# ── Raw vs deduplicated tree run (Q19) ───────────────────────────────────────
+def raw_vs_dedup_tree(df_raw, df_dedup, q):
+    """
+    Run unlimited DT and RF on raw 4121 rows and deduplicated 2088 rows
+    with the same 5-fold splits. Also count test rows that have an
+    identical training row in each fold (Q19 fix).
+    """
+    beh = [q[f"Q{i}"] for i in range(18, 24)]
+    know = [q[f"Q{i}"] for i in range(6, 11)]
+    att  = [q[f"Q{i}"] for i in range(13, 18)]
+    cols = know + att
+
+    def prep(df):
+        X = df[cols].to_numpy(float)
+        bt = df[beh].sum(axis=1)
+        y  = (bt > bt.median()).astype(int).to_numpy()
+        return X, y
+
+    X_raw, y_raw   = prep(df_raw)
+    X_ded, y_ded   = prep(df_dedup)
+
+    out = {}
+    for label, X, y in [("raw_4121", X_raw, y_raw), ("dedup_2088", X_ded, y_ded)]:
+        dt_s, rf_s, leak_counts = [], [], []
+        for tr, te in StratifiedKFold(5, shuffle=True, random_state=SEED).split(X, y):
+            dt_s.append(f1_score(y[te],
+                DecisionTreeClassifier(max_depth=None, random_state=SEED).fit(X[tr], y[tr]).predict(X[te]),
+                average="macro"))
+            rf_s.append(f1_score(y[te],
+                RandomForestClassifier(n_estimators=100, random_state=SEED, n_jobs=-1).fit(X[tr], y[tr]).predict(X[te]),
+                average="macro"))
+            # Count test rows with an identical training row
+            Xtr_set = set(map(tuple, X[tr].tolist()))
+            leak = sum(1 for row in X[te].tolist() if tuple(row) in Xtr_set)
+            leak_counts.append(leak)
+        out[label] = dict(
+            dt_mean=round(float(np.mean(dt_s)), 4),
+            dt_sd=round(float(np.std(dt_s, ddof=1)), 4),
+            rf_mean=round(float(np.mean(rf_s)), 4),
+            rf_sd=round(float(np.std(rf_s, ddof=1)), 4),
+            mean_test_rows_with_train_twin=round(float(np.mean(leak_counts)), 1),
+        )
+    return out
 
 
 # ── Straight-line detection ──────────────────────────────────────────────────
@@ -621,6 +699,10 @@ def main():
         it_course=dfc[q["Q3"]].astype("category").cat.codes.to_numpy(),
     )
     knust = run_dataset("KNUST", Xk, yk, kidx, aidx, feat_k, do_subgroups=demo_codes)
+    # Raw vs deduplicated tree run (Q19)
+    print("  Running raw vs dedup tree comparison (Q19)...")
+    raw_dedup = raw_vs_dedup_tree(df, dfc, q)
+
     knust.update(dict(
         n_raw=n_raw, n_removed=n_removed, n_unique=len(dfc),
         straight_line_removed=sl_count,
@@ -630,9 +712,12 @@ def main():
                       behaviour=round(alpha_beh, 3)),
         behaviour_distribution=dist,
         threshold_sensitivity=thr,
-        sampling_frame=dict(registered_est=3200, raw=n_raw, unique=len(dfc),
-                            response_rate_raw=round(n_raw / 3200, 3),
-                            response_rate_unique=round(len(dfc) / 3200, 3)),
+        raw_vs_dedup_tree=raw_dedup,
+        data_collection=dict(
+            method="printed questionnaire, manual transcription to Excel, batch import",
+            raw_responses=n_raw, duplicates_removed=n_removed, unique_responses=len(dfc),
+            note="No separate population frame; analysis uses all 2088 unique responses"
+        ),
     ))
 
     # ── Alzubaidi ────────────────────────────────────────────────────────────
@@ -652,12 +737,102 @@ def main():
               open(os.path.join(RESULTS_DIR, "shap_importance.json"), "w"), indent=2)
     json.dump(seeds_out,
               open(os.path.join(RESULTS_DIR, "seed_sensitivity.json"), "w"), indent=2)
+
+    # ── Figures ───────────────────────────────────────────────────────────────
+    print("\nGenerating figures...")
+    generate_figures(summary, RESULTS_DIR)
+
     print(f"\nWrote results to {RESULTS_DIR}/")
     print("  summary_results.json")
     print("  shap_importance.json")
     print("  seed_sensitivity.json")
     print("  fold_level_results_knust.csv")
     print("  fold_level_results_alzubaidi.csv")
+    print("  figures/ (ROC, boxplots, SHAP, confusion matrices)")
+
+
+def generate_figures(summary, out_dir):
+    """Generate all figures from summary_results.json data."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    import matplotlib.patches as mpatches
+
+    fig_dir = os.path.join(out_dir, "figures")
+    os.makedirs(fig_dir, exist_ok=True)
+
+    COLORS = {"KAB-XGBoost-WCE": "#2563eb", "Baseline XGBoost": "#dc2626",
+              "Stock scale_pos_weight": "#16a34a", "Decision Tree": "#ca8a04",
+              "Naive Bayes": "#7c3aed", "Logistic Regression": "#0891b2",
+              "SVM": "#ea580c", "Random Forest": "#475569"}
+
+    for ds_name in ["knust", "alzubaidi"]:
+        ds = summary[ds_name]
+        label = ds_name.upper()
+        fold_csv = os.path.join(out_dir, f"fold_level_results_{ds_name}.csv")
+        if not os.path.exists(fold_csv):
+            continue
+        folds = pd.read_csv(fold_csv)
+        model_cols = [c for c in folds.columns if c != "fold"]
+
+        # Figure 1: Stability boxplot
+        fig, ax = plt.subplots(figsize=(10, 5))
+        data  = [folds[c].values for c in model_cols]
+        cols  = [COLORS.get(c, "#6b7280") for c in model_cols]
+        bp = ax.boxplot(data, patch_artist=True, medianprops=dict(color="black", linewidth=1.5))
+        for patch, col in zip(bp["boxes"], cols):
+            patch.set_facecolor(col)
+            patch.set_alpha(0.75)
+        ax.set_xticks(range(1, len(model_cols) + 1))
+        ax.set_xticklabels([c.replace(" ", "\n") for c in model_cols], fontsize=8)
+        ax.set_ylabel("Macro F1 (50 folds)")
+        ax.set_title(f"{label}: Model Stability — 5×10 Stratified CV")
+        ax.axhline(folds["KAB-XGBoost-WCE"].mean(), color="#2563eb",
+                   linestyle="--", linewidth=0.8, alpha=0.6, label="WCE mean")
+        ax.legend(fontsize=8)
+        plt.tight_layout()
+        plt.savefig(os.path.join(fig_dir, f"Figure_stability_boxplot_{ds_name}.png"), dpi=150)
+        plt.close()
+
+        # Figure 2: SHAP importance (top 10)
+        shap_data = ds.get("shap")
+        if shap_data:
+            top10 = shap_data[:10]
+            feats = [d["feature"] for d in top10]
+            vals  = [d["mean_abs_shap"] for d in top10]
+            fig, ax = plt.subplots(figsize=(7, 4))
+            ax.barh(feats[::-1], vals[::-1], color="#2563eb", alpha=0.8)
+            ax.set_xlabel("Mean |SHAP value|")
+            ax.set_title(f"{label}: SHAP Feature Importance (top 10)")
+            plt.tight_layout()
+            plt.savefig(os.path.join(fig_dir, f"Figure_SHAP_{ds_name}.png"), dpi=150)
+            plt.close()
+
+        # Figure 3: Confusion matrices side by side (held-out)
+        ho = ds.get("held_out", {})
+        cm_b = ho.get("cm_baseline")
+        cm_w = ho.get("cm_wce")
+        if cm_b and cm_w:
+            fig, axes = plt.subplots(1, 2, figsize=(8, 3.5))
+            for ax, cm, title in zip(axes, [cm_b, cm_w],
+                                     ["Baseline XGBoost", "KAB-XGBoost-WCE"]):
+                cm_arr = np.array(cm)
+                im = ax.imshow(cm_arr, cmap="Blues")
+                ax.set_xticks([0, 1]); ax.set_yticks([0, 1])
+                ax.set_xticklabels(["Low (pred)", "High (pred)"])
+                ax.set_yticklabels(["Low (true)", "High (true)"])
+                for i in range(2):
+                    for j in range(2):
+                        ax.text(j, i, str(cm_arr[i, j]), ha="center", va="center",
+                                color="white" if cm_arr[i, j] > cm_arr.max() / 2 else "black",
+                                fontsize=13, fontweight="bold")
+                ax.set_title(title, fontsize=10)
+            fig.suptitle(f"{label}: Confusion Matrices (held-out 20%)", fontsize=11)
+            plt.tight_layout()
+            plt.savefig(os.path.join(fig_dir, f"Figure_confusion_{ds_name}.png"), dpi=150)
+            plt.close()
+
+    print(f"  Figures saved to {fig_dir}/")
 
 
 if __name__ == "__main__":
