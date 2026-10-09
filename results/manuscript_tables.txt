@@ -1,0 +1,214 @@
+
+========================================================================
+Table M7a / Table 2 — Demographics encoding
+========================================================================
+Item   Description                    Encoding                            Range
+------------------------------------------------------------------------
+Q1     Gender                         Binary: Male=1, Female=0            0, 1
+                                      (Prefer not to say merged with 0)   
+Q2     Year of study                  Ordinal: Year 2=2, Year 3=3, Year 4=4 2, 3, 4
+Q3     Prior IT course                Binary: Yes=1, No=0                 0, 1
+Q4     Years of internet use          Ordinal: <2yr=1, 2-5yr=2, >5yr=3    1, 2, 3
+Q5     Digital tool frequency         Ordinal: Rarely=1, Sometimes=2, Often=3, Very often=4 1, 2, 3, 4
+
+========================================================================
+Table 3a — KNUST 5x10 CV Results (50 folds)
+========================================================================
+Model                            Mean F1       SD   Delta vs WCE      W+      W-  Ties          p       r
+------------------------------------------------------------------------
+KAB-XGBoost-WCE (proposed)        0.6518   0.0332              —       —       —     —          —       —
+Baseline XGBoost                  0.6500   0.0347        -0.0018   551.0   674.0     1     0.5407  0.0874
+Stock scale_pos_weight            0.6503   0.0336        -0.0015   551.0   724.0     0     0.4097  0.1181
+Decision Tree                     0.6202   0.0376        -0.0316   124.0  1151.0     0     <0.001   0.701
+Naive Bayes                       0.6598   0.0313        +0.0080   871.0   404.0     0     0.0236  0.3188
+Logistic Regression               0.6559   0.0355        +0.0041   743.0   532.0     0     0.3137   0.144
+SVM                               0.6545   0.0335        +0.0027   675.0   501.0     2     0.3722  0.1288
+Random Forest                     0.6397   0.0332        -0.0121   322.0   953.0     0     0.0019  0.4307
+
+WCE vs Baseline: delta=+0.0018  W+=674.0  W-=551.0  ties=1  p=0.5407  r=0.0874
+
+========================================================================
+Table 3b — Alzubaidi 5x10 CV Results (50 folds)
+========================================================================
+Model                            Mean F1       SD   Delta vs WCE      W+      W-  Ties          p       r
+------------------------------------------------------------------------
+KAB-XGBoost-WCE (proposed)        0.6877   0.0545              —       —       —     —          —       —
+Baseline XGBoost                  0.6844   0.0561        -0.0033   377.5   612.5     6     0.1703  0.2067
+Stock scale_pos_weight            0.6830   0.0551        -0.0047   370.0   665.0     5     0.0959  0.2482
+Decision Tree                     0.6433   0.0485        -0.0444   101.0  1174.0     0     <0.001  0.7324
+Naive Bayes                       0.6506   0.0498        -0.0371   188.0  1087.0     0     <0.001  0.6136
+Logistic Regression               0.6830   0.0443        -0.0047   530.0   745.0     0     0.3045  0.1468
+SVM                               0.6627   0.0488        -0.0250   137.0  1138.0     0     <0.001  0.6833
+Random Forest                     0.6693   0.0463        -0.0184   234.0  1041.0     0     <0.001  0.5509
+
+WCE vs Baseline: delta=+0.0033  W+=612.5  W-=377.5  ties=6  p=0.1703  r=0.2067
+
+========================================================================
+Table 4 — Ablation Study, KNUST (50 folds each)
+========================================================================
+Arm     Depth   Lambda  Weights   Mean F1       SD
+------------------------------------------------------------------------
+A           5        —       No    0.6510   0.0366
+B           3        —       No    0.6521   0.0342
+C           5      1.5      Yes    0.6455   0.0329
+D           3      1.5      Yes    0.6537   0.0347
+------------------------------------------------------------------------
+  Depth contribution  (B-A): +0.0011   Wilcoxon B vs A p=0.8939
+  Weight at depth 5   (C-A): -0.0055   Wilcoxon C vs A p=0.1652
+  Weight at depth 3   (D-B): +0.0016   Wilcoxon D vs B p=0.5157
+
+========================================================================
+Table S3 — Ablation Study, Alzubaidi (50 folds each)
+========================================================================
+Arm     Depth   Lambda  Weights   Mean F1       SD
+------------------------------------------------------------------------
+A           5        —       No    0.6647   0.0513
+B           3        —       No    0.6769   0.0507
+C           5      1.5      Yes    0.6680   0.0511
+D           3      1.5      Yes    0.6790   0.0516
+------------------------------------------------------------------------
+  Depth contribution  (B-A): +0.0121   Wilcoxon B vs A p=0.0150
+  Weight at depth 5   (C-A): +0.0032   Wilcoxon C vs A p=0.3329
+  Weight at depth 3   (D-B): +0.0021   Wilcoxon D vs B p=0.6225
+
+========================================================================
+Table 5 — Held-out 80/20 Split Results, KNUST
+========================================================================
+  n_test = 418  (stratified 80/20, SEED=42)
+
+  BASELINE XGBoost confusion matrix:
+    Predicted Low   Predicted High
+  True Low:    161            73
+  True High:    68           116
+  Macro F1 = 0.6587   AUC = 0.7075
+
+  KAB-XGBoost-WCE confusion matrix:
+    Predicted Low   Predicted High
+  True Low:    156            78
+  True High:    70           114
+  Macro F1 = 0.6423   AUC = 0.6997
+
+  McNemar: b=15  c=8  chi2=1.565  p=0.2109
+  (b = baseline correct & WCE wrong; c = baseline wrong & WCE correct)
+
+  Interpretation:
+    WCE raised FP from 73 to 78 (more Low predicted as High).
+    WCE did not reduce FN: 68 vs 70.
+    Baseline F1 (0.6587) > WCE F1 (0.6423) on held-out split.
+    McNemar p=0.2109 — no significant disagreement.
+
+========================================================================
+Table 5b — Held-out 80/20 Split Results, Alzubaidi
+========================================================================
+  n_test = 238
+  Baseline F1=0.7059  WCE F1=0.6974
+  Baseline AUC=0.7829  WCE AUC=0.7670
+  McNemar b=6 c=4 chi2=0.100 p=0.7518
+
+========================================================================
+Table 6a — SHAP Feature Importance, KNUST (top 10)
+========================================================================
+Rank   Feature               Mean |SHAP|
+----------------------------------------
+1      K_agg                      0.4323
+2      A_agg                      0.3406
+3      Q5_freq                    0.1651
+4      Q8                         0.1057
+5      Q14                        0.1022
+6      Q4_yrs                     0.0898
+7      Q1_male                    0.0875
+8      Q17                        0.0694
+9      Q9                         0.0661
+10     Q10                        0.0640
+
+========================================================================
+Table 6b — SHAP Feature Importance, Alzubaidi (top 10)
+========================================================================
+Rank   Feature               Mean |SHAP|
+----------------------------------------
+1      B18_3                      0.4288
+2      B18_5                      0.2602
+3      B18_2                      0.1859
+4      A_agg                      0.1801
+5      B21                        0.1695
+6      B20_1                      0.1127
+7      B18_4                      0.1088
+8      B18_0                      0.0955
+9      B19_1                      0.0935
+10     B20_5                      0.0933
+
+========================================================================
+Table 7 — Subgroup F1, KNUST (WCE vs Baseline, OOF 5x10)
+========================================================================
+
+  year:
+  Group                n    WCE F1   Base F1
+  ------------------------------------------
+  Year 2             519    0.6309    0.6504
+  Year 3             835    0.6689    0.6573
+  Year 4             734    0.6587    0.6483
+
+  it_course:
+  Group                n    WCE F1   Base F1
+  ------------------------------------------
+  0                 1497    0.6617    0.6569
+  1                  591    0.6298    0.6274
+
+========================================================================
+Table R10a — Raw vs Deduplicated Tree Comparison (Q19 diagnosis)
+========================================================================
+Dataset                DT Mean    DT SD   RF Mean    RF SD  Mean test twins
+------------------------------------------------------------------------
+raw_4121                0.8982   0.0103    0.9046   0.0121            641.2
+dedup_2088              0.5634   0.0218    0.6247   0.0330              8.0
+
+========================================================================
+Table S1 — Seed Sensitivity (5 seeds, KNUST + Alzubaidi)
+========================================================================
+Seed     KNUST WCE   KNUST Base    KNUST Δ    KNUST p   ALZ WCE   ALZ Base    ALZ Δ      ALZ p
+------------------------------------------------------------------------
+0           0.6538       0.6542    -0.0005     0.6667    0.6887     0.6846   0.0041     0.1599
+7           0.6521       0.6553    -0.0033     0.2346    0.6831     0.6831   0.0001     0.7914
+13          0.6548       0.6528      0.002     0.3722    0.6784     0.6792  -0.0007     0.6038
+21          0.6528        0.655    -0.0023     0.3566    0.6812     0.6825  -0.0013     0.7692
+42          0.6518         0.65     0.0018     0.5407    0.6877     0.6844   0.0033     0.1703
+
+========================================================================
+Table S2 — Threshold Sensitivity, KNUST (5x10 folds)
+========================================================================
+Cut                Cutpoint   Low frac   Base F1    WCE F1          p
+------------------------------------------------------------------------
+median                 18.0      0.559    0.6500    0.6518     0.5407
+tertile_top            20.0      0.700    0.6072    0.6110     0.1812
+quartile_top           21.0      0.761    0.5762    0.5729     0.3051
+
+========================================================================
+KEY NUMBERS FOR PROSE (Methods and Results)
+========================================================================
+
+--- DATASET ---
+KNUST: raw=4121, removed=2033, unique=2088
+  class Low=1167 (55.9%), High=921 (44.1%)
+  avg tuned depth: baseline=2.54, WCE=2.54, avg lambda=1.385
+  straight_line removed=0
+  Cronbach: K=0.703, A=0.603, B=0.709
+
+Alzubaidi: raw=1231, removed=44, unique=1187
+  class Low=597 (50.3%), High=590 (49.7%)
+  avg tuned depth: baseline=2.28, WCE=2.3, avg lambda=1.4
+
+--- TIMING (depth-matched) ---
+KNUST: baseline=13.3 ms, WCE=13.3 ms
+Alzubaidi: baseline=11.2 ms, WCE=11.2 ms
+
+--- ROBUSTNESS ---
+KNUST ordinal: base=0.6423, mean=0.6369 (SD=0.0093), change=-0.0055
+  bootstrap 95% CI: [0.5956, 0.6884]
+Alzubaidi ordinal: base=0.6974, mean=0.6934 (SD=0.0148), change=-0.004
+  bootstrap 95% CI: [0.6384, 0.7561]
+
+--- SKEW TEST ---
+KNUST (n=1556): baseline=0.5555, WCE=0.559 (gain +0.0035), spw=0.6096 (gain +0.0541)
+  WCE vs spw p=<0.001, WCE vs baseline p=0.3642
+Alzubaidi (n=796): baseline=0.6202, WCE=0.6116 (gain -0.0086), spw=0.6369 (gain +0.0167)
+  WCE vs spw p=0.0029, WCE vs baseline p=0.0176
