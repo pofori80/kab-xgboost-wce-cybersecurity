@@ -4,7 +4,7 @@ A cost-sensitive XGBoost variant (KAB-XGBoost-WCE) for predicting cybersecurity 
 
 ## Key finding
 
-WCE weighting produces no measurable advantage over the baseline on either dataset. The null result holds across five random seeds on KNUST and on the Alzubaidi validation set.
+WCE weighting produces no measurable advantage over the baseline on either dataset. The null result holds across five random seeds on both datasets.
 
 ## Reproducibility
 
