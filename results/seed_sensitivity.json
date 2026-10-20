@@ -27,6 +27,42 @@
       "c": 10,
       "chi2": 5.6,
       "p": 0.018
+    },
+    "ablation_knust": {
+      "A_mean": 0.6496,
+      "B_mean": 0.6573,
+      "C_mean": 0.6484,
+      "D_mean": 0.656,
+      "B_minus_A": {
+        "delta": 0.0077,
+        "p": 0.0269
+      },
+      "C_minus_A": {
+        "delta": -0.0013,
+        "p": 0.774
+      },
+      "D_minus_B": {
+        "delta": -0.0013,
+        "p": 0.5083
+      }
+    },
+    "ablation_alzubaidi": {
+      "A_mean": 0.6646,
+      "B_mean": 0.6817,
+      "C_mean": 0.6631,
+      "D_mean": 0.6768,
+      "B_minus_A": {
+        "delta": 0.017,
+        "p": 0.0011
+      },
+      "C_minus_A": {
+        "delta": -0.0015,
+        "p": 0.5084
+      },
+      "D_minus_B": {
+        "delta": -0.0049,
+        "p": 0.154
+      }
     }
   },
   "7": {
@@ -57,6 +93,42 @@
       "c": 16,
       "chi2": 1.44,
       "p": 0.2301
+    },
+    "ablation_knust": {
+      "A_mean": 0.6475,
+      "B_mean": 0.6567,
+      "C_mean": 0.6467,
+      "D_mean": 0.654,
+      "B_minus_A": {
+        "delta": 0.0093,
+        "p": 0.0067
+      },
+      "C_minus_A": {
+        "delta": -0.0007,
+        "p": 0.735
+      },
+      "D_minus_B": {
+        "delta": -0.0027,
+        "p": 0.1998
+      }
+    },
+    "ablation_alzubaidi": {
+      "A_mean": 0.6603,
+      "B_mean": 0.6783,
+      "C_mean": 0.6637,
+      "D_mean": 0.6765,
+      "B_minus_A": {
+        "delta": 0.0179,
+        "p": 0.0001
+      },
+      "C_minus_A": {
+        "delta": 0.0034,
+        "p": 0.7764
+      },
+      "D_minus_B": {
+        "delta": -0.0017,
+        "p": 0.3248
+      }
     }
   },
   "13": {
@@ -87,6 +159,42 @@
       "c": 18,
       "chi2": 0.39,
       "p": 0.5322
+    },
+    "ablation_knust": {
+      "A_mean": 0.6441,
+      "B_mean": 0.6581,
+      "C_mean": 0.6519,
+      "D_mean": 0.6581,
+      "B_minus_A": {
+        "delta": 0.014,
+        "p": 0.0005
+      },
+      "C_minus_A": {
+        "delta": 0.0078,
+        "p": 0.0177
+      },
+      "D_minus_B": {
+        "delta": 0.0,
+        "p": 0.7165
+      }
+    },
+    "ablation_alzubaidi": {
+      "A_mean": 0.6663,
+      "B_mean": 0.6777,
+      "C_mean": 0.6683,
+      "D_mean": 0.673,
+      "B_minus_A": {
+        "delta": 0.0113,
+        "p": 0.0122
+      },
+      "C_minus_A": {
+        "delta": 0.0019,
+        "p": 0.7349
+      },
+      "D_minus_B": {
+        "delta": -0.0047,
+        "p": 0.1813
+      }
     }
   },
   "21": {
@@ -117,6 +225,42 @@
       "c": 12,
       "chi2": 1.939,
       "p": 0.1637
+    },
+    "ablation_knust": {
+      "A_mean": 0.6467,
+      "B_mean": 0.6556,
+      "C_mean": 0.6485,
+      "D_mean": 0.6536,
+      "B_minus_A": {
+        "delta": 0.0089,
+        "p": 0.0156
+      },
+      "C_minus_A": {
+        "delta": 0.0018,
+        "p": 0.639
+      },
+      "D_minus_B": {
+        "delta": -0.0019,
+        "p": 0.3777
+      }
+    },
+    "ablation_alzubaidi": {
+      "A_mean": 0.6636,
+      "B_mean": 0.6744,
+      "C_mean": 0.6658,
+      "D_mean": 0.675,
+      "B_minus_A": {
+        "delta": 0.0108,
+        "p": 0.0142
+      },
+      "C_minus_A": {
+        "delta": 0.0023,
+        "p": 0.6264
+      },
+      "D_minus_B": {
+        "delta": 0.0006,
+        "p": 0.901
+      }
     }
   },
   "42": {
@@ -147,6 +291,42 @@
       "c": 8,
       "chi2": 1.565,
       "p": 0.2109
+    },
+    "ablation_knust": {
+      "A_mean": 0.651,
+      "B_mean": 0.6521,
+      "C_mean": 0.6455,
+      "D_mean": 0.6537,
+      "B_minus_A": {
+        "delta": 0.0011,
+        "p": 0.8939
+      },
+      "C_minus_A": {
+        "delta": -0.0055,
+        "p": 0.1652
+      },
+      "D_minus_B": {
+        "delta": 0.0016,
+        "p": 0.5157
+      }
+    },
+    "ablation_alzubaidi": {
+      "A_mean": 0.6647,
+      "B_mean": 0.6769,
+      "C_mean": 0.668,
+      "D_mean": 0.679,
+      "B_minus_A": {
+        "delta": 0.0121,
+        "p": 0.015
+      },
+      "C_minus_A": {
+        "delta": 0.0032,
+        "p": 0.3329
+      },
+      "D_minus_B": {
+        "delta": 0.0021,
+        "p": 0.6225
+      }
     }
   }
 }
