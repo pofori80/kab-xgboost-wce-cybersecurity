@@ -60,9 +60,10 @@ Recorded in `results/run_log.txt`:
 
 ## Documents
 
-- `docs/Ofori_Prince_Phase1_Methods_R13.docx` — Methods chapter (R13)
-- `docs/Ofori_Prince_Phase1_Results_R13.docx` — Results chapter (R13)
-- `docs/Ofori_Prince_Phase1_Results_R14.docx` — Results chapter (R14): adds embedded pipeline figures and Q7 Not-supported rows
+- `docs/Ofori_Prince_Phase1_Methods_R14.docx` — Methods chapter (R14): Q14 block-level label fix; commit hash updated to 0e93660
+- `docs/Ofori_Prince_Phase1_Methods_R13.docx` — Methods chapter (R13, superseded)
+- `docs/Ofori_Prince_Phase1_Results_R15.docx` — Results chapter (R15): removes R7b overreach sentence and duplicate seed sentence
+- `docs/Ofori_Prince_Phase1_Results_R14.docx` — Results chapter (R14, superseded): embedded pipeline figures and Q7 Not-supported rows
 
 ## Source
 
